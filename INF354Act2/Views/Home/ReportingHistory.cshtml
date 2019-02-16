@@ -1,0 +1,82 @@
+﻿@model INF354Act2.ViewModel.AdvancedViewModel
+@using INF354Act2.ViewModel
+@using System.Globalization
+@using System.Data
+
+<h1>Employee Sales:</h1>
+<div class="criteria">
+    @* Create a HTML Form so that users can enter criteria for the Advanced Report *@
+    @using (Html.BeginForm("ReportingHistory", "Home", FormMethod.Post))
+    {
+        <label>Select Employee</label>
+        @Html.DropDownListFor(m => m.SelectedEmpID, Model.empName, "-- Please select --", new { @class = "form-control" })
+        <br />
+        <input type="submit" value="Generate" class="btn btn-primary" />
+    }
+</div>
+<hr />
+
+@if (Model.emps != null)
+{
+    //this first panel shows general details of the selected vendor
+    <div class="panel panel-success">
+        <div class="panel-heading"><strong>Employee: </strong>@Model.emps.emp_fname</div>
+        <div class="panel-body">
+            <label>Last Name:   </label>@Model.emps.emp_lname<br />
+            <label>Email:   </label>@Model.emps.emp_email<br />
+            <label>Phone Number:   </label>@Model.emps.emp_phone<br />
+
+
+        </div>
+
+
+    </div>
+
+    <div class="panel">
+        @if (Model.chartData != null)
+        {
+            //Load the result of the EmployeeOrdersChart view into an image
+            //This will make a call to the EmployeeOrdersChart controller action
+            <img src="@Url.Action("EmployeeOrdersChart", "Home")" />
+        }
+
+    </div>
+
+    <div class="panel panel-info">
+        @foreach (var group in Model.results)
+        {
+            <h4>Employee ID:@group.Key</h4>
+            <table class="table table-striped">
+                <tr>
+                   
+                    <th>All Sales made by Employee</th>
+                    <th>Customer Name</th>
+                    <th>Invoice Number</th>
+                
+                </tr>
+                @foreach (ReportRecord groupItem in group)
+                {
+                <tr>
+
+                    <td>@groupItem.invTotal.ToString("C", CultureInfo.CurrentCulture)</td>
+                    <td>@groupItem.custName</td>
+                    <td>@groupItem.invNum</td>
+
+                </tr>
+                }
+            </table>
+            <hr />
+        }
+        <h3>Grand Total: <strong>@Model.results.Sum(group => group.Sum(item => item.invTotal)).ToString("C", CultureInfo.CurrentCulture)</strong></h3>
+
+
+    </div>
+    //The following links will call the export actions that will download the reports in PDF or Word via Crystal reports
+    <div>
+        @Html.ActionLink("Export as PDF", "ExportAdvancedPDF", "Home")<br />
+        @Html.ActionLink("Export as Word", "ExportAdvancedWord", "Home")
+    </div>
+}
+
+
+

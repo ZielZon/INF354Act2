@@ -1,0 +1,41 @@
+﻿@model INF354Act2.ViewModel.AdvancedViewModel
+@using INF354Act2.ViewModel
+@using System.Globalization
+@using System.Data
+
+<h1>Purchases from Vendor:</h1>
+<div class="criteria">
+    @using (Html.BeginForm("ReportingState", "Home", FormMethod.Post))
+    {
+        <div class="row">
+            <label>Select State</label>
+            @Html.DropDownListFor(m => m.SelectedState, Model.States, "-- Please select --", new { @class = "form-control" })
+            <h2> VS </h2>
+            <label>Select State</label>
+            @Html.DropDownListFor(m => m.SelectedState2, Model.States, "-- Please select --", new { @class = "form-control" })
+            <br />
+            <input type="submit" value="Generate" class="btn btn-primary" />
+        </div>
+    }
+</div>
+<hr />
+
+@if (Model.SelectedState != null && Model.SelectedState2 != null)
+{
+    //this first panel shows general details of the selected vendor
+<div class="panel panel-success">
+    <div class="panel-heading"><strong>State Details: </strong>@Model.SelectedState</div>
+    <div class="panel-body">
+        <label>Number of Customers in state </label>
+       
+        <br />
+    </div>
+    <br />
+    <div class="panel-heading"><strong>State Details: </strong>@Model.SelectedState2</div>
+    <div class="panel-body">
+        <label>Number of Customers in state </label><br />
+    </div>
+
+
+</div>
+}

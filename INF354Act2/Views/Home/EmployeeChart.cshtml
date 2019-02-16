@@ -1,0 +1,12 @@
+﻿@model Dictionary<string, double>
+@{
+    Layout = null;
+}
+@{
+    var myChart = new Chart(width: 800, height: 500)
+        .AddTitle("Money Employee made")
+        .AddSeries(
+            xValue: Model.Keys,
+            yValues: Model.Values)
+        .Write();
+}
